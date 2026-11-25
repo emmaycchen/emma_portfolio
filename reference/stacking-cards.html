@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Process – Stacking Cards</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #063d5c;
+    --accent: #ff5a36;
+    --bg: #ffffff;
+    --card-w: 340px;
+    --card-h: 440px;
+    --radius: 28px;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body { font-family: "Roboto", system-ui, sans-serif; background: var(--bg); color: var(--ink); }
+
+  /* Spacer sections so the demo can be scrolled into and out of */
+  .filler { min-height: 70vh; display: grid; place-items: center; color: #9bb3c2; font-size: 14px; letter-spacing: .08em; text-transform: uppercase; }
+
+  /* ===== Process section =====
+     The section is tall; the stage inside is sticky.
+     Scroll progress through the section drives the cards. */
+  .process { position: relative; height: 600vh; }
+  .stage {
+    position: sticky; top: 0; height: 100vh; overflow: hidden;
+    display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center; gap: 48px;
+    padding: 0 clamp(24px, 6vw, 96px);
+    max-width: 1440px; margin: 0 auto;
+  }
+
+  .intro .eyebrow { display: inline-block; font-size: 14px; font-weight: 500; color: var(--accent); }
+  .intro .eyebrow::before { content: ""; display: block; width: 50px; height: 4px; background: var(--accent); border-radius: 2px; margin-bottom: 14px; transform: rotate(-1deg); }
+  .intro h2 { font-size: clamp(40px, 5vw, 64px); font-weight: 300; line-height: 1.05; margin: 36px 0 16px; }
+  .intro p { max-width: 36ch; font-size: 16px; line-height: 1.6; }
+  .counter { margin-top: 48px; font-size: 14px; font-weight: 500; letter-spacing: .08em; display: flex; align-items: center; gap: 14px; }
+  .counter .bar { width: 120px; height: 3px; background: rgba(6,61,92,.15); border-radius: 2px; overflow: hidden; }
+  .counter .bar i { display: block; height: 100%; width: 0; background: var(--accent); }
+
+  /* Card deck */
+  .deck { position: relative; width: var(--card-w); height: var(--card-h); justify-self: center; }
+  .card {
+    position: absolute; inset: 0;
+    border-radius: var(--radius);
+    padding: 32px 30px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    color: #fff;
+    box-shadow: 0 18px 40px -18px rgba(6,61,92,.45);
+    will-change: transform;
+    transform-origin: 50% 60%;
+  }
+  .card.light { color: #04202f; }
+  .card .num { font-size: 120px; font-weight: 300; line-height: .9; letter-spacing: -.03em; text-align: center; margin-top: 40px; }
+  .card h3 { font-size: 22px; font-weight: 400; letter-spacing: .04em; text-transform: uppercase; text-align: center; }
+  .card p { font-size: 17px; line-height: 1.45; text-align: center; }
+
+  .c1 { background: #2c5469; } .c2 { background: #2d6a8f; } .c3 { background: #87bbdc; }
+  .c4 { background: #587f93; } .c5 { background: #063d5c; }
+
+  /* Tablet / mobile: heading on top, deck below */
+  @media (max-width: 860px) {
+    :root { --card-w: min(78vw, 320px); --card-h: min(104vw, 420px); }
+    .stage { grid-template-columns: 1fr; align-content: center; gap: 28px; }
+    .intro h2 { margin-top: 24px; }
+    .counter { margin-top: 20px; }
+    .card .num { font-size: 96px; margin-top: 24px; }
+  }
+
+  /* Reduced motion: no pinning, simple readable grid */
+  @media (prefers-reduced-motion: reduce) {
+    .process { height: auto; }
+    .stage { position: static; height: auto; grid-template-columns: 1fr; padding-block: 80px; }
+    .deck { width: 100%; height: auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+    .card { position: static; min-height: 320px; transform: none !important; }
+    .counter { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="filler">Scroll down ↓</div>
+
+<section class="process" id="process" aria-label="How it works">
+  <div class="stage">
+    <div class="intro">
+      <span class="eyebrow">Process</span>
+      <h2>How it works</h2>
+      <p>Here’s a quick look at how the simple and effective process guides you from start to success.</p>
+      <div class="counter" aria-hidden="true"><span id="count">01 / 05</span><span class="bar"><i id="bar"></i></span></div>
+    </div>
+
+    <div class="deck" id="deck">
+      <article class="card c1"><h3>Discovery</h3><div class="num">01</div><p>A call to learn what you sell, who buys it and what goals matter. You get a short written brief.</p></article>
+      <article class="card c2"><h3>Audit</h3><div class="num">02</div><p>I review your site, analytics and funnel to find the biggest leaks.</p></article>
+      <article class="card c3 light"><h3>Design &amp; Built</h3><div class="num">03</div><p>Wireframes first, then a tested design built in clean front-end code.</p></article>
+      <article class="card c4"><h3>Launch</h3><div class="num">04</div><p>We launch with tracking in place, forms checked on real phones and a clear handover.</p></article>
+      <article class="card c5"><h3>Measure &amp; Iterate</h3><div class="num">05</div><p>A monthly review of the numbers, then the next experiment.</p></article>
+    </div>
+  </div>
+</section>
+
+<div class="filler">Next section</div>
+
+<script>
+(() => {
+  const section = document.getElementById('process');
+  const cards = [...document.querySelectorAll('#deck .card')];
+  const countEl = document.getElementById('count');
+  const barEl = document.getElementById('bar');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+
+  // Final resting tilt of each card (deg) – alternating, small, so edges peek out behind the next card.
+  const TILT = [-1.5, 2.5, -2, 2, -1];
+  // Extra rotation a card carries while it travels up (deg), alternating direction.
+  const SWING = [0, 7, -7, 7, -7];
+
+  const START = 0.04;   // progress where card 2 begins to enter
+  const SEG = 0.2;      // progress length of each entrance (4 entrances → ends at 0.84, then hold)
+
+  const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+  const easeInOut = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+  function update() {
+    if (reduce.matches) return;
+    const rect = section.getBoundingClientRect();
+    const total = section.offsetHeight - innerHeight;
+    const p = clamp(-rect.top / total);
+    const travel = innerHeight * 0.9 + cards[0].offsetHeight * 0.5;
+
+    let active = 0;
+    cards.forEach((card, i) => {
+      if (i === 0) { card.style.transform = `rotate(${TILT[0]}deg)`; return; }
+      const t = clamp((p - (START + (i - 1) * SEG)) / SEG);
+      const e = easeInOut(t);
+      const y = (1 - e) * travel;
+      const r = TILT[i] + (1 - e) * SWING[i];
+      card.style.transform = `translate3d(0, ${y.toFixed(1)}px, 0) rotate(${r.toFixed(2)}deg)`;
+      card.style.visibility = t === 0 ? 'hidden' : 'visible';
+      if (t > 0.5) active = i;
+    });
+
+    countEl.textContent = `0${active + 1} / 05`;
+    barEl.style.width = `${((active + 1) / cards.length) * 100}%`;
+  }
+
+  let ticking = false;
+  const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(() => { update(); ticking = false; }); } };
+  addEventListener('scroll', onScroll, { passive: true });
+  addEventListener('resize', onScroll);
+  reduce.addEventListener('change', () => { cards.forEach(c => { c.style.transform = ''; c.style.visibility = ''; }); update(); });
+  update();
+})();
+</script>
+</body>
+</html>

@@ -1,26 +1,43 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-orange: #ff5a34;
+  --color-cream: #f3ecda;
+  --color-navy: #053d5e;
+  --color-sage: #bbbea9;
+  --color-orange-ink: #c23010; /* orange for TEXT on cream (4.79:1); keep `orange` for fills/lines */
+  --color-navy-deep: #011c25; /* Figma pill bg (methodology); not in CLAUDE.md palette */
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-sans: var(--font-roboto);
+  --font-afacad: var(--font-afacad);
+  /* Figma layouts (designed at 1440) switch on here and scale down proportionally via --px. */
+  --breakpoint-desk: 64rem;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-cream);
+  color: var(--color-navy);
+  font-family: var(--font-roboto), sans-serif;
+}
+
+/* Visible keyboard focus on every background: white inner ring + navy outline. */
+:focus-visible {
+  outline: 3px solid var(--color-navy);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px #fff;
+}
+
+/*
+ * Fluid scale for the Figma-pixel sections. 1 design px = --px: exactly 1px at >=1440, and
+ * proportionally smaller below. 100cqw resolves against the nearest `@container` (the section),
+ * so a classic scrollbar never causes horizontal overflow. Body text never drops below 14px.
+ */
+:root {
+  --px: min(1px, calc(100cqw / 1440));
+  --fs-16: max(14px, calc(16 * var(--px)));
+  --fs-18: max(14px, calc(18 * var(--px)));
+  --fs-24: max(14px, calc(24 * var(--px)));
+  --fs-45: max(14px, calc(45 * var(--px)));
+  --fs-48: max(14px, calc(48 * var(--px)));
+  --fs-50: max(14px, calc(50 * var(--px)));
 }
